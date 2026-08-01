@@ -10,8 +10,12 @@ function isConfigured() {
   return !!app.forum.attribute('preservemygames-altcha.configured');
 }
 
+function isMasterEnabled() {
+  return !!app.forum.attribute('preservemygames-altcha.enabled');
+}
+
 function isEnabled(key) {
-  return isConfigured() && !!app.forum.attribute(`preservemygames-altcha.${key}`);
+  return isConfigured() && isMasterEnabled() && !!app.forum.attribute(`preservemygames-altcha.${key}`);
 }
 
 function applyToModal(modal, enabledKey, dataMethod) {

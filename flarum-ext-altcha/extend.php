@@ -4,8 +4,8 @@ use Flarum\Extend;
 use Flarum\User\ForgotPasswordValidator;
 use Flarum\User\LogInValidator;
 use PreserveMyGames\Altcha\Api\Controller\ChallengeController;
+use PreserveMyGames\Altcha\Listener\AddAltchaForumAttributes;
 use PreserveMyGames\Altcha\Listener\AddAltchaValidatorRule;
-use PreserveMyGames\Altcha\Listener\SyncConfiguredSetting;
 use PreserveMyGames\Altcha\Listener\ValidatePostAltcha;
 use PreserveMyGames\Altcha\Listener\ValidateRegistrationAltcha;
 
@@ -29,12 +29,14 @@ return [
         ->default('preservemygames-altcha.protect_password_reset', '1')
         ->default('preservemygames-altcha.protect_discussion', '0')
         ->default('preservemygames-altcha.protect_reply', '0')
-        ->serializeToForum('preservemygames-altcha.configured', 'preservemygames-altcha.configured', 'boolval')
         ->serializeToForum('preservemygames-altcha.protectRegistration', 'preservemygames-altcha.protect_registration', 'boolval')
         ->serializeToForum('preservemygames-altcha.protectLogin', 'preservemygames-altcha.protect_login', 'boolval')
         ->serializeToForum('preservemygames-altcha.protectForgot', 'preservemygames-altcha.protect_password_reset', 'boolval')
         ->serializeToForum('preservemygames-altcha.protectDiscussion', 'preservemygames-altcha.protect_discussion', 'boolval')
         ->serializeToForum('preservemygames-altcha.protectReply', 'preservemygames-altcha.protect_reply', 'boolval'),
+
+    (new Extend\ApiSerializer(\Flarum\Api\Serializer\ForumSerializer::class))
+        ->attributes(AddAltchaForumAttributes::class),
 
     (new Extend\Validator(LogInValidator::class))
         ->configure(AddAltchaValidatorRule::class),
@@ -43,7 +45,6 @@ return [
         ->configure(AddAltchaValidatorRule::class),
 
     (new Extend\Event())
-        ->listen(\Flarum\Foundation\Event\ApplicationBooted::class, SyncConfiguredSetting::class)
         ->listen(\Flarum\User\Event\Saving::class, ValidateRegistrationAltcha::class)
         ->listen(\Flarum\Post\Event\Saving::class, ValidatePostAltcha::class),
 ];
