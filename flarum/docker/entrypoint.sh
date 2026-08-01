@@ -152,6 +152,7 @@ install_or_migrate() {
   fi
 
   php flarum extension:enable preservemygames-spam-protection 2>/dev/null || true
+  php flarum extension:enable preservemygames-user-management 2>/dev/null || true
   php flarum migrate --force 2>/dev/null || php flarum migrate || true
   php flarum cache:clear || true
 }
