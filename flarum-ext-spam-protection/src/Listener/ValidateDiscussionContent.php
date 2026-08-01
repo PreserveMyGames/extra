@@ -28,7 +28,8 @@ class ValidateDiscussionContent
             $event->actor,
             (string) $title,
             'preservemygames-spam-protection.forum.discussion',
-            false
+            false,
+            true
         );
     }
 }
