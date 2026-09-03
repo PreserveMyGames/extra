@@ -23,7 +23,7 @@ return [
 
     (new Extend\Settings())
         ->default('preservemygames-altcha.enabled', '1')
-        ->default('preservemygames-altcha.cost', 5000)
+        ->default('preservemygames-altcha.cost', 50000)
         ->default('preservemygames-altcha.protect_registration', '1')
         ->default('preservemygames-altcha.protect_login', '0')
         ->default('preservemygames-altcha.protect_password_reset', '1')

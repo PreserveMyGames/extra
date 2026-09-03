@@ -1,10 +1,8 @@
 <?php
 
 use Flarum\Extend;
-use PreserveMyGames\SpamProtection\Listener\RecordDiscussionActivity;
-use PreserveMyGames\SpamProtection\Listener\RecordPostActivity;
-use PreserveMyGames\SpamProtection\Listener\ValidateDiscussionContent;
-use PreserveMyGames\SpamProtection\Listener\ValidatePostContent;
+use PreserveMyGames\SpamProtection\Listener\MonitorNewUser;
+use PreserveMyGames\SpamProtection\Listener\MonitorPostedContent;
 
 return [
     (new Extend\Locales(__DIR__.'/resources/locale')),
@@ -13,24 +11,22 @@ return [
         ->js(__DIR__.'/js/dist/admin.js'),
 
     (new Extend\Event())
-        ->listen(\Flarum\Post\Event\Saving::class, ValidatePostContent::class)
-        ->listen(\Flarum\Post\Event\Posted::class, RecordPostActivity::class)
-        ->listen(\Flarum\Discussion\Event\Saving::class, ValidateDiscussionContent::class)
-        ->listen(\Flarum\Discussion\Event\Started::class, RecordDiscussionActivity::class),
+        ->listen(\Flarum\Post\Event\Posted::class, MonitorPostedContent::class)
+        ->listen(\Flarum\User\Event\Registered::class, MonitorNewUser::class),
 
     (new Extend\Settings())
-        ->default('preservemygames-spam-protection.new_user_post_delay_enabled', '1')
-        ->default('preservemygames-spam-protection.new_user_post_delay', 3600)
-        ->default('preservemygames-spam-protection.min_post_interval', 8)
-        ->default('preservemygames-spam-protection.new_user_min_post_interval', 20)
-        ->default('preservemygames-spam-protection.burst_posts_hour', 20)
-        ->default('preservemygames-spam-protection.duplicate_window', 900)
+        ->default('preservemygames-spam-protection.enabled', '0')
+        ->default('preservemygames-spam-protection.base_url', 'https://openrouter.ai/api/v1')
+        ->default('preservemygames-spam-protection.model', 'openai/gpt-4o-mini')
+        ->default('preservemygames-spam-protection.monitor_posts', '1')
+        ->default('preservemygames-spam-protection.monitor_new_users', '1')
         ->default('preservemygames-spam-protection.new_user_days', 14)
         ->default('preservemygames-spam-protection.new_user_post_count', 10)
-        ->default('preservemygames-spam-protection.min_links_for_context_check', 4)
-        ->default('preservemygames-spam-protection.min_non_link_chars', 25)
-        ->default('preservemygames-spam-protection.max_links', 0)
-        ->default('preservemygames-spam-protection.new_user_max_links', 0)
-        ->default('preservemygames-spam-protection.max_url_ratio', 0)
-        ->default('preservemygames-spam-protection.url_ratio_min_length', 120),
+        ->default('preservemygames-spam-protection.min_confidence', 70)
+        ->default('preservemygames-spam-protection.action_hide_post', '1')
+        ->default('preservemygames-spam-protection.action_hide_discussion', '1')
+        ->default('preservemygames-spam-protection.action_lock_discussion', '1')
+        ->default('preservemygames-spam-protection.action_suspend_user', '1')
+        ->default('preservemygames-spam-protection.suspend_days', 30)
+        ->default('preservemygames-spam-protection.fail_open', '1'),
 ];
