@@ -3,6 +3,7 @@
 use Flarum\Extend;
 use Flarum\User\User;
 use PreserveMyGames\DeleteUsers\Access\UserPolicy;
+use PreserveMyGames\DeleteUsers\Api\Controller\BulkDeleteUsersController;
 use PreserveMyGames\DeleteUsers\Api\Controller\DeleteUserController;
 use PreserveMyGames\DeleteUsers\Api\Serializer\AddUserDeleteAttributes;
 
@@ -13,6 +14,7 @@ return [
     (new Extend\Locales(__DIR__.'/resources/locale')),
 
     (new Extend\Routes('api'))
+        ->post('/pmg/users/delete', 'pmg.users.bulk-delete', BulkDeleteUsersController::class)
         ->post('/pmg/users/{id}/delete', 'pmg.users.delete', DeleteUserController::class),
 
     (new Extend\ApiSerializer(\Flarum\Api\Serializer\UserSerializer::class))
