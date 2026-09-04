@@ -5,9 +5,9 @@ use Flarum\User\ForgotPasswordValidator;
 use Flarum\User\LogInValidator;
 use PreserveMyGames\Altcha\Api\Controller\ChallengeController;
 use PreserveMyGames\Altcha\Listener\AddAltchaValidatorRule;
-use PreserveMyGames\Altcha\Listener\SerializeAltchaConfigured;
 use PreserveMyGames\Altcha\Listener\ValidatePostAltcha;
 use PreserveMyGames\Altcha\Listener\ValidateRegistrationAltcha;
+use PreserveMyGames\Altcha\Serializer\AddAltchaForumAttributes;
 
 return [
     (new Extend\Frontend('forum'))
@@ -21,6 +21,9 @@ return [
     (new Extend\Routes('api'))
         ->get('/altcha/challenge', 'pmg.altcha.challenge', ChallengeController::class),
 
+    (new Extend\ApiSerializer(\Flarum\Api\Serializer\ForumSerializer::class))
+        ->attributes(AddAltchaForumAttributes::class),
+
     (new Extend\Settings())
         ->default('preservemygames-altcha.enabled', '1')
         ->default('preservemygames-altcha.cost', 50000)
@@ -29,7 +32,6 @@ return [
         ->default('preservemygames-altcha.protect_password_reset', '1')
         ->default('preservemygames-altcha.protect_discussion', '0')
         ->default('preservemygames-altcha.protect_reply', '0')
-        ->serializeToForum('preservemygames-altcha.configured', 'preservemygames-altcha.enabled', SerializeAltchaConfigured::class)
         ->serializeToForum('preservemygames-altcha.enabled', 'preservemygames-altcha.enabled', 'boolval')
         ->serializeToForum('preservemygames-altcha.protectRegistration', 'preservemygames-altcha.protect_registration', 'boolval')
         ->serializeToForum('preservemygames-altcha.protectLogin', 'preservemygames-altcha.protect_login', 'boolval')
