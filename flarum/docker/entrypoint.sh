@@ -157,6 +157,7 @@ install_or_migrate() {
   php flarum extension:enable preservemygames-delete-users 2>/dev/null || true
   php flarum extension:enable preservemygames-altcha 2>/dev/null || true
   php flarum extension:enable preservemygames-maintenance 2>/dev/null || true
+  php flarum extension:enable preservemygames-lxmf 2>/dev/null || true
   php flarum migrate --force 2>/dev/null || php flarum migrate || true
   php flarum cache:clear || true
   scrub_sourcemaps
